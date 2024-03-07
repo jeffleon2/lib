@@ -1,0 +1,59 @@
+syntax = "proto3";
+package google.cloud.lib.v1;
+option go_package = "/gen";
+import "google/api/annotations.proto";
+
+
+message User {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message GetUserResponse {
+    string name = 1;
+    string email = 2;
+}
+
+message SignupResponse {
+    string token = 1;
+    string email = 2;
+}
+
+message SigninRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message SigninResponse {
+    string token = 1;
+    string email = 2;
+}
+
+message Empty {}
+
+service UserService {
+    /*
+        The option google.api.http is the one that enables HTTP routing on the grpc gateway
+        but for it to work it is necessary to have the google/api folder with the annotation and http proto buffers, 
+        you can find these proto buffers here https://github.com/googleapis/googleapis/tree/master/google/api
+        also generate the proto with the option --grpc-gateway_out
+    */
+    rpc Get(Empty) returns (GetUserResponse){
+        option (google.api.http) = {
+            get: "/v1/user"
+        };
+    }
+    rpc Signin(SigninRequest) returns (SigninResponse){
+        option (google.api.http) = {
+            post: "/v1/user/signin"
+            body: "*"
+        };
+    }
+    rpc Signup(User) returns (SignupResponse){
+        option (google.api.http) = {
+            post: "/v1/user/signup"
+            body: "*"
+        };
+    }
+}
